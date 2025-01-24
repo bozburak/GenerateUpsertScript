@@ -73,7 +73,7 @@
             materialButton2.NoAccentTextColor = Color.Empty;
             materialButton2.Size = new Size(130, 36);
             materialButton2.TabIndex = 1;
-            materialButton2.Text = "Scripti Hazıla";
+            materialButton2.Text = "SCRIPTI HAZIRLA";
             materialButton2.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             materialButton2.UseAccentColor = false;
             materialButton2.UseVisualStyleBackColor = true;
