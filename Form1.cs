@@ -41,33 +41,31 @@ namespace GenerateUpsertScript
             string targetTableName = materialTextBox21.Text;
             string primaryKeyColumn = materialTextBox22.Text;
 
-            var headers = csvLines[0].Split(',');
+            var headers = csvLines[0].Split(';').Select(h => h.Trim().ToLowerInvariant()).ToArray();
             var mergeScripts = new List<string>();
 
             int totalLines = csvLines.Length - 1; // Baþlýk satýrýný çýkar
             int processedLines = 0;
 
+            // primaryKeyColumn'un headers dizisindeki indeksini bul
+            int primaryKeyIndex = Array.FindIndex(headers, header => header.Equals(primaryKeyColumn, StringComparison.OrdinalIgnoreCase));
+
             foreach (var line in csvLines.Skip(1))
             {
-                var values = line.Split(',').Select(v => v.Trim('"')).ToArray();
-                var primaryKeyValue = values[0];
+                var values = line.Split(';').Select(v => v.Trim('"')).ToArray();
+                var primaryKeyValue = values[primaryKeyIndex];
 
-                var updateColumns = headers
-                    .Skip(1)
-                    .Select((header, index) => $"{header} = '{values[index + 1]}'")
-                    .ToArray();
-
-                var insertColumns = string.Join(", ", headers);
-                var insertValues = string.Join(", ", values.Select(v => $"'{v}'"));
+                var insertValues = string.Join(", ", values.Select(v => IsNumeric(v) || v.Equals("NULL", StringComparison.OrdinalIgnoreCase) ? v : $"'{v}'"));
+                var updateSet = string.Join(", ", headers.Select((h, i) => $"{h} = {(IsNumeric(values[i]) || values[i].Equals("NULL", StringComparison.OrdinalIgnoreCase) ? values[i] : $"'{values[i]}'")}"));
 
                 string mergeScript = $@"
 MERGE {targetTableName} AS target
-USING (SELECT {primaryKeyValue} AS {primaryKeyColumn}) AS source
+USING (SELECT {(IsNumeric(primaryKeyValue) ? primaryKeyValue : $"'{primaryKeyValue}'")} AS {primaryKeyColumn}) AS source
 ON (target.{primaryKeyColumn} = source.{primaryKeyColumn})
 WHEN MATCHED THEN
-    UPDATE SET {string.Join(", ", updateColumns)}
+    UPDATE SET {updateSet}
 WHEN NOT MATCHED THEN
-    INSERT ({insertColumns})
+    INSERT ({string.Join(", ", headers)})
     VALUES ({insertValues});
 ";
                 mergeScripts.Add(mergeScript);
@@ -88,6 +86,11 @@ WHEN NOT MATCHED THEN
 
             // Formu tekrar etkinleþtir
             this.Enabled = true;
+        }
+
+        private bool IsNumeric(string value)
+        {
+            return long.TryParse(value, out _) || int.TryParse(value, out _) || decimal.TryParse(value, out _);
         }
     }
 }

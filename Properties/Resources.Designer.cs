@@ -59,15 +59,5 @@ namespace GenerateUpsertScript.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Screenshot_24_1_2025_132120_arma_bimar_com {
-            get {
-                object obj = ResourceManager.GetObject("Screenshot_24-1-2025_132120_arma.bimar.com", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
     }
 }
