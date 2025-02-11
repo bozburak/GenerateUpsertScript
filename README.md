@@ -14,3 +14,48 @@ copy with headers
 paste excel and save csv
 ![image](https://github.com/user-attachments/assets/4aa9c920-2bc3-4728-acca-b6832af34a05)
  
+
+
+
+
+1. aşama
+
+SELECT COLUMN_NAME
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'tablo ismi'
+AND COLUMN_NAME IN (
+    SELECT COLUMN_NAME
+    FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE TABLE_NAME = 'tablo ismi'
+    AND COLUMN_NAME IS NOT NULL
+) order by COLUMN_NAME;
+
+
+koduyla hedef tablonun kolon isimleri listelenir
+
+
+2. aşama 
+
+
+hedef tablonun kolon isimlerine göre kaynak tabloya sql yazılır
+
+örn:
+
+select id, date, columnName1, columnName1 from TableName
+
+
+
+3. aşama 
+
+headerlarla beraber select sorgusu CSV formatında kaydedilir.
+
+
+4. aşama 
+
+Program açılır ve dosya verilere çalıştırılır.
+
+
+
+**Önemli**
+
+Dosyayı programın okuması için açık olmaması gerekmektedir.
