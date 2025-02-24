@@ -52,10 +52,10 @@ headerlarla beraber select sorgusu CSV formatında kaydedilir.
 
 4. aşama 
 
-Program açılır ve dosya verilere çalıştırılır.
+Program açılır. Uniq alan, hedef tablo ismi alanları doldurulur. Dosya seç ile kaydedilen CSV dosyası seçilir.
 
 
 
 **Önemli**
 
-Dosyayı programın okuması için açık olmaması gerekmektedir.
+CSV dosyasını programın okuması için açık olmaması gerekmektedir.
